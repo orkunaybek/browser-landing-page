@@ -1,0 +1,67 @@
+body {
+	background-color: rgba(0, 50, 125, 0.05);
+	font-size: 0.95rem;
+}
+
+.page-container {
+	max-width: 1920px;
+	padding: 30px;
+}
+.grid {
+	padding-bottom: 30px;
+}
+
+.grid-item {
+	height: 100%;
+}
+
+.grid-icon {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	width: 35px;
+	height: 35px;
+	background-color: #c6c6c6;
+	border-radius: 8px;
+}
+
+.grid-icon svg {
+	width: 17px;
+}
+
+.grid:nth-child(n + 1) .grid-icon {
+	background: rgba(254, 202, 87, 0.3);
+	fill: #eab643;
+}
+
+.grid:nth-child(n + 2) .grid-icon {
+	background: rgba(0, 144, 217, 0.15);
+	fill: rgba(0, 144, 217, 0.7);
+}
+
+.grid:nth-child(n + 3) .grid-icon {
+	background: rgba(95, 39, 205, 0.15);
+	fill: rgba(95, 39, 205, 0.6);
+}
+
+.grid:nth-child(n + 4) .grid-icon {
+	background: rgba(16, 172, 132, 0.1);
+	fill: rgba(16, 172, 132, 0.7);
+}
+
+.card {
+	border: none;
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+}
+
+.grid-item > .card-body {
+	padding: 1.75rem;
+}
