@@ -53,17 +53,22 @@
 					<h5 class="grid-title m-0">News</h5>
 				</div>
 
-				<hooper :itemsToShow="3">
+				<hooper :settings="sliderSettings">
 					<slide v-for="(article, index) in articles" :key="index">
-						<div class="news-slide">
+						<div class="card news-slide">
 							<a :href="article.url" target="_blank"
-								><img :src="article.urlToImage" alt="" width="100%"
+								><img class="card-img-top" :src="article.urlToImage" alt=""
 							/></a>
-							<p class="article-title pt-2 mb-2">{{ article.title }}</p>
-							<p class="article-description">{{ article.description }}</p>
+							<div class="card-body">
+								<p class="article-title">{{ article.title }}</p>
+								<p class="article-description">{{ article.description }}</p>
+							</div>
 						</div>
 					</slide>
-					<hooper-pagination slot="hooper-addons"></hooper-pagination>
+					<hooper-pagination
+						class="pagination"
+						slot="hooper-addons"
+					></hooper-pagination>
 				</hooper>
 			</div>
 		</div>
@@ -75,7 +80,6 @@ import axios from "axios";
 import { Hooper, Slide, Pagination as HooperPagination } from "hooper";
 import "hooper/dist/hooper.css";
 export default {
-<<<<<<< HEAD
 	name: "News",
 	components: { Hooper, Slide, HooperPagination },
 	created() {
@@ -89,31 +93,35 @@ export default {
 			news_api_key: "1bc87c9c2f554b4aa94f708308f94329",
 			articles: [],
 			source: "bbc-new",
-			request: ""
+			request: "",
+			sliderSettings: {
+				itemsToShow: 3,
+				autoPlay: true,
+				playSpeed: 3000
+			}
 		};
 	},
 
-
-  methods: {
-    newRequest() {
-      this.request =
-        "https://newsapi.org/v2/top-headlines?country=" +
-        this.spurce +
-        "&apiKey=" +
-        this.news_api_key;
-      this.sendRequest();
-    },
-    sendRequest() {
-      axios
-        .get(this.request)
-        .then(response => {
-          this.infoNews = response.data;
-          this.articles = response.data.articles;
-        })
-        .catch(error => console.log(error));
-    }
-  },
-  computed: {}
+	methods: {
+		newRequest() {
+			this.request =
+				"https://newsapi.org/v2/top-headlines?country=" +
+				this.spurce +
+				"&apiKey=" +
+				this.news_api_key;
+			this.sendRequest();
+		},
+		sendRequest() {
+			axios
+				.get(this.request)
+				.then(response => {
+					this.infoNews = response.data;
+					this.articles = response.data.articles;
+				})
+				.catch(error => console.log(error));
+		}
+	},
+	computed: {}
 };
 </script>
 
@@ -129,10 +137,14 @@ export default {
 	line-height: 1.2;
 }
 .news-slide {
-	margin: 0 10px;
+	margin: 0 5px;
 }
 
-.hooper-slide.is-active.is-current .news-slide {
-	margin-left: 0;
+.grid-item > .card-body {
+	background-color: rgba(0, 50, 125, 0.05);
+}
+
+.pagination {
+	bottom: -25px;
 }
 </style>

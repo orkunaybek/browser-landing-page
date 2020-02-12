@@ -65,3 +65,7 @@ body {
 .grid-item > .card-body {
 	padding: 1.75rem;
 }
+
+.hooper-indicator {
+	background-color: rgba(0, 144, 217, 0.15);
+}

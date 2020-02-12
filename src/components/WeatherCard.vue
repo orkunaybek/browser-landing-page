@@ -34,12 +34,21 @@
 					</div>
 					<h5 class="grid-title m-0">5 Days Forecast</h5>
 				</div>
-				<div class="row align-items-center my-4 main-day">
+
+				<div class="row align-items-center my-2 main-day">
+					<div v-if="loading" class="lds-ring m-auto">
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+					</div>
 					<div class="col-4">{{ city }}</div>
-					<div class="col-4 text-center">{{ fToCel(currentWeather.temp) }}</div>
+					<div v-if="currentWeather.temp" class="col-4 text-center">
+						{{ fToCel(currentWeather.temp) }}
+					</div>
 					<div
 						class="city-img col-4"
-						:class="this.currentWeather.weather"
+						:class="this.currentWeather.weather.toLowerCase()"
 					></div>
 				</div>
 				<input
@@ -48,17 +57,53 @@
 					v-model="api_city"
 					placeholder="Şehir adı girin"
 				/>
+
 				<div
-					class="justify-content-start"
-					v-for="(listItem, index) in list"
-					v-bind:key="index"
+					@click="arrowStyler()"
+					:style="arrowStyle"
+					class="detail-arrow col-12"
 				>
-					<ForecastItem
-						:listItem="listItem"
-						:celcius="fToCel"
-						:takeDay="takeDay"
-					/>
+					<svg
+						class="detail-arrow"
+						version="1.1"
+						id="Layer_1"
+						xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						x="0px"
+						y="0px"
+						viewBox="0 0 491.996 491.996"
+						style="enable-background:new 0 0 491.996 491.996;"
+						xml:space="preserve"
+					>
+						<g>
+							<g>
+								<path
+									d="M484.132,124.986l-16.116-16.228c-5.072-5.068-11.82-7.86-19.032-7.86c-7.208,0-13.964,2.792-19.036,7.86l-183.84,183.848
+			L62.056,108.554c-5.064-5.068-11.82-7.856-19.028-7.856s-13.968,2.788-19.036,7.856l-16.12,16.128
+			c-10.496,10.488-10.496,27.572,0,38.06l219.136,219.924c5.064,5.064,11.812,8.632,19.084,8.632h0.084
+			c7.212,0,13.96-3.572,19.024-8.632l218.932-219.328c5.072-5.064,7.856-12.016,7.864-19.224
+			C491.996,136.902,489.204,130.046,484.132,124.986z"
+								/>
+							</g>
+						</g>
+					</svg>
 				</div>
+
+				<transition name="fade">
+					<div v-show="isDetail" class="details">
+						<div
+							class="justify-content-start"
+							v-for="(listItem, index) in list"
+							v-bind:key="index"
+						>
+							<ForecastItem
+								:listItem="listItem"
+								:celcius="fToCel"
+								:takeDay="takeDay"
+							/>
+						</div>
+					</div>
+				</transition>
 			</div>
 		</div>
 	</div>
@@ -78,11 +123,10 @@ export default {
 
 	beforeMount() {
 		this.getPos();
-	},
-	mounted() {
 		setTimeout(this.newRequest, 100);
 		setTimeout(this.sendRequest, 100);
 	},
+	mounted() {},
 	data() {
 		return {
 			info: {},
@@ -96,7 +140,10 @@ export default {
 			api_key: "ab1f5ae8db3e7311b66dd9446baa3a41",
 			api_long: "",
 			api_lat: "",
-			request: ""
+			request: "",
+			isDetail: false,
+			arrowStyle: "transform:rotate(0deg)",
+			loading: "false"
 		};
 	},
 	methods: {
@@ -127,6 +174,7 @@ export default {
 			this.sendRequest();
 		},
 		sendRequest() {
+			this.loading = true;
 			axios
 				.get(this.request)
 				.then(response => {
@@ -137,6 +185,7 @@ export default {
 					this.currentWeather.temp = response.data.list[0].main.temp;
 				})
 				.catch(error => console.log(error));
+			this.loading = false;
 		},
 		fToCel(value) {
 			return Math.round(value - 273) + "°C";
@@ -167,6 +216,15 @@ export default {
 					break;
 			}
 			return value;
+		},
+		arrowStyler() {
+			if (!this.isDetail) {
+				this.arrowStyle = "transform:scaleY(-1)";
+			} else {
+				this.arrowStyle = "transform:scaleY(1)";
+			}
+			this.isDetail = !this.isDetail;
+			return this.arrowStyle;
 		}
 	},
 	computed: {
@@ -180,8 +238,7 @@ export default {
 			}
 			return x;
 		}
-	},
-	filters: {}
+	}
 };
 </script>
 
@@ -222,5 +279,61 @@ export default {
 
 .main-day {
 	font-size: 20px;
+}
+
+.detail-arrow {
+	display: block;
+	width: 18px;
+	margin: 20px auto 0 auto;
+	fill: #eab643;
+}
+.fade-enter-active,
+.fade-leave-active {
+	transition: all 0.5s;
+	max-height: 1000px;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+	opacity: 0;
+	max-height: 0;
+}
+
+.detail-arrow {
+	transition: all 0.3s ease;
+}
+
+.lds-ring {
+	display: inline-block;
+	position: relative;
+	width: 80px;
+	height: 80px;
+}
+.lds-ring div {
+	box-sizing: border-box;
+	display: block;
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	margin: 8px;
+	border: 8px solid #eab643;
+	border-radius: 50%;
+	animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	border-color: #eab643 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+	animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+	animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+	animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 </style>
