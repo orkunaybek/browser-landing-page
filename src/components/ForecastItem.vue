@@ -1,7 +1,7 @@
 <template>
 	<div @click="toggleVisibility" class="forecast-detail">
 		<div class="row align-items-center">
-			<div class="col-6 mb-2 p-2">
+			<div class="col-sm-6 col-3 mb-2 p-2">
 				<div class="badge badge-info p-1">
 					{{ takeDay(listItem[0].dt_txt) }}
 				</div>
@@ -10,17 +10,17 @@
 			<transition name="fade">
 				<div
 					v-if="!isVisible"
-					class="col-6 d-flex align-items-center detail-row"
+					class="col-sm-6 col-12 d-flex align-items-center detail-row"
 				>
-					<div class="max-temp col-4">
+					<div class="max-temp  p-0 col-4">
 						{{ celcius(findMax) }}
 					</div>
-					<div class="min-temp col-4">
+					<div class="min-temp p-0 col-4">
 						{{ celcius(findMin) }}
 					</div>
 					<div
 						:class="findAverageWeather"
-						class="weather-img wi-right col-4"
+						class="weather-img wi-right p-0 col-4"
 					></div>
 				</div>
 			</transition>

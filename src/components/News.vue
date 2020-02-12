@@ -53,17 +53,18 @@
 					<h5 class="grid-title m-0">News</h5>
 				</div>
 
-				<div>
-					<hooper class="row" :itemsToShow="3">
-						<slide v-for="(article, index) in articles" :key="index">
+				<hooper :itemsToShow="3">
+					<slide v-for="(article, index) in articles" :key="index">
+						<div class="news-slide">
 							<a :href="article.url" target="_blank"
 								><img :src="article.urlToImage" alt="" width="100%"
 							/></a>
 							<p class="article-title pt-2 mb-2">{{ article.title }}</p>
 							<p class="article-description">{{ article.description }}</p>
-						</slide>
-					</hooper>
-				</div>
+						</div>
+					</slide>
+					<hooper-pagination slot="hooper-addons"></hooper-pagination>
+				</hooper>
 			</div>
 		</div>
 	</div>
@@ -71,10 +72,11 @@
 
 <script>
 import axios from "axios";
-import { Hooper, Slide } from "hooper";
+import { Hooper, Slide, Pagination as HooperPagination } from "hooper";
+import "hooper/dist/hooper.css";
 export default {
 	name: "News",
-	components: { Hooper, Slide },
+	components: { Hooper, Slide, HooperPagination },
 	created() {
 		this.request =
 			"https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=1bc87c9c2f554b4aa94f708308f94329";
@@ -123,5 +125,12 @@ export default {
 	font-size: 0.9rem;
 	font-family: "Times New Roman", Times, serif;
 	line-height: 1.2;
+}
+.news-slide {
+	margin: 0 10px;
+}
+
+.hooper-slide.is-active.is-current .news-slide {
+	margin-left: 0;
 }
 </style>

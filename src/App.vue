@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<div class="weather-card page-container">
-			<div class="row align-items-stretch">
+			<div class="row align-items-start">
 				<WeatherCard />
 				<News />
 			</div>
