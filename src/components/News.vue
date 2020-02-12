@@ -75,6 +75,7 @@ import axios from "axios";
 import { Hooper, Slide, Pagination as HooperPagination } from "hooper";
 import "hooper/dist/hooper.css";
 export default {
+<<<<<<< HEAD
 	name: "News",
 	components: { Hooper, Slide, HooperPagination },
 	created() {
@@ -92,26 +93,27 @@ export default {
 		};
 	},
 
-	methods: {
-		newRequest() {
-			this.request =
-				"https://newsapi.org/v2/top-headlines?country=" +
-				this.spurce +
-				"&apiKey=" +
-				this.news_api_key;
-			this.sendRequest();
-		},
-		sendRequest() {
-			axios
-				.get(this.request)
-				.then(response => {
-					this.infoNews = response.data;
-					this.articles = response.data.articles;
-				})
-				.catch(error => console.log(error));
-		}
-	},
-	computed: {}
+
+  methods: {
+    newRequest() {
+      this.request =
+        "https://newsapi.org/v2/top-headlines?country=" +
+        this.spurce +
+        "&apiKey=" +
+        this.news_api_key;
+      this.sendRequest();
+    },
+    sendRequest() {
+      axios
+        .get(this.request)
+        .then(response => {
+          this.infoNews = response.data;
+          this.articles = response.data.articles;
+        })
+        .catch(error => console.log(error));
+    }
+  },
+  computed: {}
 };
 </script>
 

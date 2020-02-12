@@ -36,16 +36,14 @@
 				</div>
 				<div class="row align-items-center my-4 main-day">
 					<div class="col-4">{{ city }}</div>
-					<div class="col-4 text-center">
-						{{ fToCel(currentWeather.temp) }}
-					</div>
+					<div class="col-4 text-center">{{ fToCel(currentWeather.temp) }}</div>
 					<div
 						class="city-img col-4"
-						:class="this.currentWeather.weather.toLowerCase()"
+						:class="this.currentWeather.weather"
 					></div>
 				</div>
 				<input
-					v-on:keyup.enter="newRequest()"
+					v-on:keyup.enter="cityRequest()"
 					class="form-control"
 					v-model="api_city"
 					placeholder="Şehir adı girin"
@@ -78,10 +76,12 @@ export default {
 	name: "WeatherCard",
 	components: { ForecastItem },
 
-	created() {
-		this.request =
-			"https://api.openweathermap.org/data/2.5/forecast?q=istanbul&APPID=ab1f5ae8db3e7311b66dd9446baa3a41";
-		this.sendRequest();
+	beforeMount() {
+		this.getPos();
+	},
+	mounted() {
+		setTimeout(this.newRequest, 100);
+		setTimeout(this.sendRequest, 100);
 	},
 	data() {
 		return {
@@ -92,13 +92,33 @@ export default {
 				weather: "",
 				temp: ""
 			},
-			api_city: "istanbul",
+			api_city: "",
 			api_key: "ab1f5ae8db3e7311b66dd9446baa3a41",
+			api_long: "",
+			api_lat: "",
 			request: ""
 		};
 	},
 	methods: {
+		savePosition(position) {
+			this.api_lat = Math.ceil(position.coords.latitude);
+			this.api_long = Math.ceil(position.coords.longitude);
+		},
+		getPos() {
+			navigator.geolocation.getCurrentPosition(this.savePosition);
+		},
 		newRequest() {
+			this.request =
+				"https://api.openweathermap.org/data/2.5/forecast?lat=" +
+				this.api_lat +
+				"&lon=" +
+				this.api_long +
+				"&APPID=" +
+				this.api_key;
+
+			this.sendRequest();
+		},
+		cityRequest() {
 			this.request =
 				"https://api.openweathermap.org/data/2.5/forecast?q=" +
 				this.api_city +
