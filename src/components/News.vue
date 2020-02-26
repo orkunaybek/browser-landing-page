@@ -55,13 +55,12 @@
 
 				<hooper :settings="sliderSettings">
 					<slide v-for="(article, index) in articles" :key="index">
-						<div class="card news-slide">
+						<div class="card news-slide h-100">
 							<a :href="article.url" target="_blank"
 								><img class="card-img-top" :src="article.urlToImage" alt=""
 							/></a>
 							<div class="card-body">
 								<p class="article-title">{{ article.title }}</p>
-								<p class="article-description">{{ article.description }}</p>
 							</div>
 						</div>
 					</slide>
@@ -95,11 +94,12 @@ export default {
 			source: "bbc-new",
 			request: "",
 			sliderSettings: {
-				itemsToShow: 3,
-				autoPlay: true,
-				playSpeed: 3000
+				itemsToShow: 3
 			}
 		};
+	},
+	updated() {
+		// Hooper.update();
 	},
 
 	methods: {
@@ -139,12 +139,25 @@ export default {
 .news-slide {
 	margin: 0 5px;
 }
-
+.grid-item.card {
+	border-radius: unset;
+}
 .grid-item > .card-body {
 	background-color: rgba(0, 50, 125, 0.05);
 }
 
+.card {
+	border-radius: 5px;
+}
 .pagination {
 	bottom: -25px;
+}
+
+.hooper {
+	height: 200px;
+}
+
+.hooper:focus {
+	outline: none;
 }
 </style>

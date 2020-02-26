@@ -123,8 +123,10 @@ export default {
 
 	beforeMount() {
 		this.getPos();
-		setTimeout(this.newRequest, 100);
-		setTimeout(this.sendRequest, 100);
+		setTimeout(() => {
+			let self = this;
+			self.sendRequest();
+		}, 2000);
 	},
 	mounted() {},
 	data() {
@@ -136,15 +138,34 @@ export default {
 				weather: "",
 				temp: ""
 			},
+			requestState: true,
 			api_city: "",
 			api_key: "ab1f5ae8db3e7311b66dd9446baa3a41",
 			api_long: "",
 			api_lat: "",
-			request: "",
 			isDetail: false,
 			arrowStyle: "transform:rotate(0deg)",
 			loading: "false"
 		};
+	},
+	computed: {
+		list() {
+			var x = {};
+			for (let i = 0; i < this.forecasts.length; i++) {
+				let key = this.forecasts[i].dt_txt.substr(0, 10);
+				if (typeof x[key] == "undefined") x[key] = [];
+
+				x[key].push(this.forecasts[i]);
+			}
+			return x;
+		},
+		request() {
+			this.getPos();
+			if (this.requestState) {
+				return `https://api.openweathermap.org/data/2.5/forecast?lat=${this.api_lat}&lon=${this.api_long}&APPID=${this.api_key}`;
+			}
+			return `https://api.openweathermap.org/data/2.5/forecast?q=${this.api_city}&APPID=${this.api_key}`;
+		}
 	},
 	methods: {
 		savePosition(position) {
@@ -154,28 +175,17 @@ export default {
 		getPos() {
 			navigator.geolocation.getCurrentPosition(this.savePosition);
 		},
-		newRequest() {
-			this.request =
-				"https://api.openweathermap.org/data/2.5/forecast?lat=" +
-				this.api_lat +
-				"&lon=" +
-				this.api_long +
-				"&APPID=" +
-				this.api_key;
+		cityRequest() {
+			this.requestState = false;
+
+			if (!this.api_city) this.requestState = true;
 
 			this.sendRequest();
 		},
-		cityRequest() {
-			this.request =
-				"https://api.openweathermap.org/data/2.5/forecast?q=" +
-				this.api_city +
-				"&APPID=" +
-				this.api_key;
-			this.sendRequest();
-		},
-		sendRequest() {
+		async sendRequest() {
 			this.loading = true;
-			axios
+
+			await axios
 				.get(this.request)
 				.then(response => {
 					this.city = response.data.city.name;
@@ -225,18 +235,6 @@ export default {
 			}
 			this.isDetail = !this.isDetail;
 			return this.arrowStyle;
-		}
-	},
-	computed: {
-		list() {
-			var x = {};
-			for (let i = 0; i < this.forecasts.length; i++) {
-				let key = this.forecasts[i].dt_txt.substr(0, 10);
-				if (typeof x[key] == "undefined") x[key] = [];
-
-				x[key].push(this.forecasts[i]);
-			}
-			return x;
 		}
 	}
 };

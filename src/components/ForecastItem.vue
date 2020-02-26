@@ -1,8 +1,8 @@
 <template>
 	<div @click="toggleVisibility" class="forecast-detail">
 		<div class="row align-items-center">
-			<div class="col-sm-6 col-3 mb-2 p-2">
-				<div class="badge badge-info p-1">
+			<div class="col-sm-6 col-3 ">
+				<div class="badge badge-info ml-2 p-1">
 					{{ takeDay(listItem[0].dt_txt) }}
 				</div>
 			</div>
